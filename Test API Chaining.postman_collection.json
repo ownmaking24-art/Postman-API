@@ -1,0 +1,273 @@
+{
+  "info": {
+    "_postman_id": "e3936ad3-3b66-40c4-834d-7264bdd4e20c",
+    "name": "Test API Chaining",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53335464"
+  },
+  "item": [
+    {
+      "name": "PostRequest",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              " const jsonData= pm.response.json();\r",
+              " pm.environment.set(\"Chaining_ID\",jsonData.id);\r",
+              "//  pm.variables.unset(User_name);\r",
+              "//  pm.variables.unset(User_email);\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "var random= Math.random().toString(32).substring(2);\r",
+              "\r",
+              "var newUser = \"Sham\"+random;\r",
+              "var email_=\"sham\"+random+\"@gmail.com\";\r",
+              "\r",
+              "pm.environment.set(\"User_email\",email_);\r",
+              "pm.environment.set(\"User_name\",newUser);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"name\":\"{{User_name}}\", \r\n\"gender\":\"male\", \r\n\"email\":\"{{User_email}}\", \r\n\"status\":\"Inactive\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://gorest.co.in/public/v2/users",
+          "protocol": "https",
+          "host": [
+            "gorest",
+            "co",
+            "in"
+          ],
+          "path": [
+            "public",
+            "v2",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetRequest",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var responseBody = pm.response.json();\r",
+              "pm.test(\"Posted data and retrived data are the same\", ()=>{\r",
+              "    pm.expect(responseBody.id).to.eql(pm.environment.get(\"Chaining_ID\"));\r",
+              "    \r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{API_Chaning}}/v2/users/{{Chaining_ID}}",
+          "host": [
+            "{{API_Chaning}}"
+          ],
+          "path": [
+            "v2",
+            "users",
+            "{{Chaining_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PutRequest",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "console.log(pm.environment.get(\"Chaining_ID\"));\r",
+              "var random= Math.random().toString(32).substring(2);\r",
+              "var newUser = \"Sham\"+random;\r",
+              "var email_=\"sham\"+random+\"@gmail.com\";\r",
+              "\r",
+              "pm.environment.set(\"User_email\",email_);\r",
+              "pm.environment.set(\"User_name\",newUser);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.unset(\"User_email\");\r",
+              "pm.environment.unset(\"User_name\");\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"name\":\"{{User_name}}\", \r\n\"gender\":\"male\", \r\n\"email\":\"{{User_email}}\", \r\n\"status\":\"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{API_Chaning}}/v2/users/{{Chaining_ID}}",
+          "host": [
+            "{{API_Chaning}}"
+          ],
+          "path": [
+            "v2",
+            "users",
+            "{{Chaining_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DeleteRequest",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.unset(\"Chaining_ID\");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{API_Chaning}}/v2/users/{{Chaining_ID}}",
+          "host": [
+            "{{API_Chaning}}"
+          ],
+          "path": [
+            "v2",
+            "users",
+            "{{Chaining_ID}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{Collection_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "Collection_variable",
+      "value": ""
+    },
+    {
+      "key": "New_Collection_var",
+      "value": ""
+    },
+    {
+      "key": "Collection_token",
+      "value": ""
+    }
+  ]
+}
